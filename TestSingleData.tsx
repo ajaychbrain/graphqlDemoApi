@@ -1,14 +1,12 @@
 import { useQuery, gql } from "@apollo/client";
 
-const TestData: React.FC = () => {
+const TestSingleData: React.FC = () => {
   const GET_POSTS = gql`
     query {
-      posts {
-        data {
-          id
-          title
-          body
-        }
+      post(id: 5) {
+        id
+        title
+        body
       }
     }
   `;
@@ -21,15 +19,18 @@ const TestData: React.FC = () => {
   return (
     <div>
       <h1>Posts</h1>
-      {data.posts.data.map((post: any) => (
+      <h2>{post.id}</h2>
+      <h2>{post.title}</h2>
+      <h2>{post.body}</h2>
+      {/* {post.map((post: any) => (
         <div key={post.id}>
           <h2>{post.id}</h2>
           <h3>{post.title}</h3>
           <p>{post.body}</p>
         </div>
-      ))}
+      ))} */}
     </div>
   );
 };
 
-export default TestData;
+export default TestSingleData;

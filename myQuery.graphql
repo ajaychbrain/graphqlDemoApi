@@ -1,0 +1,8 @@
+graphql
+query MyQuery {
+  users {
+    id
+    name
+    email
+  }
+}
