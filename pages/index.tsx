@@ -2,7 +2,10 @@ import Head from "next/head";
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import styles from "@/styles/Home.module.css";
-import TestData from "@/TestData";
+import TestSingleData from "@/TestSingleData";
+import TestMultipleData from "@/TestMultipleData";
+import CreateUserMutation from "@/CreateUserMutation";
+import Header from "./Components/Header/Header";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,10 +18,19 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>
-        <h1>Hello World</h1>
-        <TestData />
-      </div>
+      {/* <div>
+        <h1 style={{ color: "orange" }}>Fetch Single Record</h1>
+        <TestSingleData />
+        <br />
+        <br />
+
+        <h1 style={{ color: "blue" }}>Fetch Mutltiple Record</h1>
+        <TestMultipleData />
+
+        <h1 style={{ color: "green" }}>Create User Mutations</h1>
+        <CreateUserMutation />
+      </div> */}
+      <Header />
     </>
   );
 }
