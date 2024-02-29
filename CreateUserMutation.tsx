@@ -1,5 +1,5 @@
 import { gql, useMutation } from "@apollo/client";
-import { Button, TextField } from "@mui/material";
+import { Button, TextField, CircularProgress } from "@mui/material";
 import React, { useState } from "react";
 import UpdateUserMutation from "./UpdateUserMutation";
 import DeleteUserMutation from "./DeleteUserMutation";
@@ -24,23 +24,15 @@ const UPDATE_USER_MUTATION = gql`
   }
 `;
 
-const DELETE_USER_MUTATION = gql`
-  mutation DeletePost($id: ID!) {
-    deletePost(id: $id) {
-      id
-    }
-  }
-`;
-
-function CreateUserMutation() {
+const CreateUserMutation = () => {
   const [createUser, { loading: createLoading, error: createError }] =
     useMutation(CREATE_USER_MUTATION);
   const [updateUser, { loading: updateLoading, error: updateError }] =
     useMutation(UPDATE_USER_MUTATION);
-  const [deleteUser, { loading: deleteLoading, error: deleteError }] =
-    useMutation(DELETE_USER_MUTATION);
   const [formData, setFormData] = useState<any[]>([]);
-  const [editIndex, setEditIndex] = useState<number | null>(null);
+
+  const [editIndex, setEditIndex] = useState(null);
+  const [showLoader, setShowLoader] = useState(false);
 
   const handleSubmit = async (event: any) => {
     event.preventDefault();
@@ -51,11 +43,12 @@ function CreateUserMutation() {
     };
 
     try {
+      setShowLoader(true);
+
       if (editIndex !== null) {
-        // If editIndex is not null, update existing post
         const postId = formData[editIndex].id;
         await updateUser({ variables: { id: postId, input } });
-        const updatedFormData = [...formData];
+        const updatedFormData: any = [...formData];
         updatedFormData[editIndex] = {
           ...updatedFormData[editIndex],
           ...input,
@@ -63,18 +56,21 @@ function CreateUserMutation() {
         setFormData(updatedFormData);
         setEditIndex(null);
       } else {
-        // If editIndex is null, create new post
         const { data } = await createUser({ variables: { input } });
         setFormData([...formData, data.createPost]);
-        console.log(formData, "Create FormData");
       }
+
       event.target.reset();
     } catch (error) {
       console.error("Error creating/updating post:", error);
+    } finally {
+      setTimeout(() => {
+        setShowLoader(false);
+      }, 100);
     }
   };
 
-  const handleEdit = (index: number) => {
+  const handleEdit = (index: any) => {
     setEditIndex(index);
     const { title, body } = formData[index];
     const titleInput = document.getElementById("title") as HTMLInputElement;
@@ -92,6 +88,7 @@ function CreateUserMutation() {
       console.error("Error deleting item:", error);
     }
   };
+
   return (
     <div className="mainDiv">
       <form onSubmit={handleSubmit}>
@@ -138,6 +135,12 @@ function CreateUserMutation() {
         )}
       </form>
 
+      {showLoader && (
+        <div className="loader">
+          <CircularProgress />
+        </div>
+      )}
+
       <div className="test1">
         <h2 style={{ display: "flex", justifyContent: "center" }}>
           {formData.length > 0 ? <>Post Data</> : ""}
@@ -156,9 +159,9 @@ function CreateUserMutation() {
                 </tr>
               </thead>
               <tbody>
-                {formData.map((data, index) => (
-                  <tr key={index}>
-                    <td className="gap2">{data.id}</td>
+                {formData.map((data, id) => (
+                  <tr key={id}>
+                    <td className="gap2">{id + 1}</td>
                     <td className="gap2">{data.title}</td>
                     <td className="gap2">{data.body}</td>
                     <td className="gap2">
@@ -169,7 +172,7 @@ function CreateUserMutation() {
                     >
                       Edit
                     </Button> */}
-                      <UpdateUserMutation onClick={() => handleEdit(index)} />
+                      <UpdateUserMutation onClick={() => handleEdit(id)} />
                     </td>
                     <td className="gap2">
                       {/* <Button
@@ -179,7 +182,7 @@ function CreateUserMutation() {
                     >
                       Delete
                     </Button> */}
-                      <DeleteUserMutation onClick={() => handleDelete(index)} />
+                      <DeleteUserMutation onClick={() => handleDelete(id)} />
                     </td>
                   </tr>
                 ))}
@@ -194,6 +197,6 @@ function CreateUserMutation() {
       </div>
     </div>
   );
-}
+};
 
 export default CreateUserMutation;
