@@ -90,6 +90,10 @@ body {
   color: #fff;
 }
 
+.error-message {
+  color: red;
+}
+
 .mainDiv {
   display: flex;
   flex-direction: column;
