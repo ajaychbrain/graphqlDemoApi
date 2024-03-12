@@ -6,10 +6,17 @@ import TestSingleData from "@/TestSingleData";
 import TestMultipleData from "@/TestMultipleData";
 import CreateUserMutation from "@/CreateUserMutation";
 import Header from "./Components/Header/Header";
+import { useSession, signIn } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+export default function Home(): JSX.Element {
+  const { data: session } = useSession();
+  console.log(session, "my Session");
+  if (session === null) {
+    return <button onClick={() => signIn()}>Login</button>;
+  }
+
   return (
     <>
       <Head>
