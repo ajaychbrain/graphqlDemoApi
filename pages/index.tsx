@@ -11,7 +11,6 @@ export default function Home(): JSX.Element {
   if (session === null) {
     return <button onClick={() => signIn()}>Login</button>;
   }
-
   return (
     <>
       <Head>
@@ -25,7 +24,7 @@ export default function Home(): JSX.Element {
       <p>Hello{session?.user?.name}</p>
       <p>Hello{session?.user?.email}</p>
 
-      <button onClick={() => signOut()}>Signout</button>
+      <button onClick={() => signOut()}>LogOut</button>
     </>
   );
 }
